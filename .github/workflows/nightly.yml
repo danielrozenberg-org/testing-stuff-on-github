@@ -1,0 +1,26 @@
+name: nightly
+
+on: push
+
+jobs:
+  cut-nightly:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: ⭐ Cut Nightly ⭐
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          HEAD_SHA=$(git rev-parse HEAD)
+          NIGHTLY_BRANCH_NAME=$(date --utc "+%y%m%d.1")
+
+          gh api \
+            --method POST \
+            --header "Accept: application/vnd.github+json" \
+            /repos/${{ github.repository }}/git/refs \
+            --field ref="refs/heads/${NIGHTLY_BRANCH_NAME}" \
+            --field sha="${HEAD_SHA}"
