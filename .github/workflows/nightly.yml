@@ -15,11 +15,21 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.BOT_ACCESS_TOKEN }}
         run: |
           HEAD_SHA=$(git rev-parse HEAD)
-          NIGHTLY_BRANCH_NAME=$(date --utc "+%y%m%d.8")
+          NIGHTLY_BRANCH_NAME=$(date --utc "+%y%m%d.1")
 
           if [[ "${GITHUB_TOKEN}" != ghp_* ]]; then
             echo "This job must have a personal token set as the GITHUB_TOKEN env variable."
             exit 1
+          fi
+
+          if [[ -n $(git branch --list --all "origin/${NIGHTLY_BRANCH_NAME}") ]]; then
+            echo "The nightly branch ${NIGHTLY_BRANCH_NAME} already exists. Skipping..."
+            exit 0
+          fi
+
+          if [[ -n $(git branch --all --contains HEAD origin/??????.*) ]]; then
+            echo "There is already a release branch with the current HEAD commit. Skipping..."
+            exit 0
           fi
 
           gh api \
