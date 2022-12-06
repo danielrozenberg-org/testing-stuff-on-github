@@ -15,7 +15,12 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.BOT_ACCESS_TOKEN }}
         run: |
           HEAD_SHA=$(git rev-parse HEAD)
-          NIGHTLY_BRANCH_NAME=$(date --utc "+%y%m%d.5")
+          NIGHTLY_BRANCH_NAME=$(date --utc "+%y%m%d.6")
+
+          if [[ "${GITHUB_TOKEN}" != ghp_* ]]; then
+            echo "This job must have a personal token set as the GITHUB_TOKEN env variable."
+            exit 1
+          fi
 
           gh api \
             --method POST \
