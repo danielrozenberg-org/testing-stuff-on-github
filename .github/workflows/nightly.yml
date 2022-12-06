@@ -16,7 +16,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           HEAD_SHA=$(git rev-parse HEAD)
-          NIGHTLY_BRANCH_NAME=$(date --utc "+%y%m%d.2")
+          NIGHTLY_BRANCH_NAME=$(date --utc "+%y%m%d.3")
 
           gh api \
             --method POST \
